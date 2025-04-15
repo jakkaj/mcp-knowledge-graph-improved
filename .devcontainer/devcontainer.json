@@ -24,9 +24,11 @@
 		}
 	},
 	"mounts": [
-		"source=/dev/,target=/dev/,type=bind,consistency=consistent",
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/vscode/.ssh,type=bind,consistency=cached"
 	],
+	"runArgs": [
+		"--network=host"
+	]
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
