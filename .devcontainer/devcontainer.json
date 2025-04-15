@@ -14,12 +14,14 @@
 			"username": "vscode",
 			"userUid": "automatic",
 			"userGid": "automatic"
-		}
+		},
+		"ghcr.io/devcontainers/features/docker-outside-of-docker:1": {}
 	},
 	"customizations": {
 		"vscode": {
 			"extensions": [
-				"RooVeterinaryInc.roo-cline"
+				"RooVeterinaryInc.roo-cline",
+				"bierner.markdown-mermaid"
 			]
 		}
 	},

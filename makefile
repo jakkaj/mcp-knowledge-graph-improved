@@ -1,4 +1,4 @@
-.PHONY: build run npx-build clean test
+.PHONY: build run npx-build clean test docker-build docker-test docker-test-full
 
 build:
 	npm run build
@@ -14,3 +14,19 @@ npx-build: build
 
 clean:
 	rm -rf dist
+
+# Docker targets for building and testing the Docker image
+
+docker-build:
+	docker build -t mcp-knowledge-graph .
+
+docker-test: docker-build
+	echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | docker run -i mcp-knowledge-graph
+
+docker-test-full:
+	@echo "Testing Docker container with MCP protocol..."
+	@echo "1. Listing tools..."
+	@echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | docker run -i --init mcp-knowledge-graph
+	@echo "2. Reading graph..."
+	@echo '{"jsonrpc":"2.0","id":"2","method":"call_tool","params":{"name":"read_graph","arguments":{}}}' | docker run -i --init mcp-knowledge-graph
+	@echo "Docker test complete"
