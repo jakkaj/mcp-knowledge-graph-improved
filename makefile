@@ -17,11 +17,14 @@ clean:
 
 # Docker targets for building and testing the Docker image
 
+test-cli: build
+	echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | node dist/index.js --server
+
 docker-build:
 	docker build -t mcp-knowledge-graph .
 
 docker-test: docker-build
-	echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | docker run -i mcp-knowledge-graph
+	echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | docker run -i --rm mcp-knowledge-graph
 
 docker-test-full:
 	@echo "Testing Docker container with MCP protocol..."
