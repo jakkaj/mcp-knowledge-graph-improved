@@ -22,3 +22,7 @@
 - use `make` to run commands like build, test, run etc. 
 - you can look at the makefile for commands
 
+## Project
+
+- Our source is a typescript project in ./src. 
+- ./dist is not our source, it is the build output.  

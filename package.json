@@ -20,17 +20,17 @@
     "test": "NODE_OPTIONS=\"--loader=ts-node/esm\" mocha \"src/**/*.test.ts\""
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "1.0.1",
+    "@modelcontextprotocol/sdk": "1.9.0",
     "commander": "^13.1.0",
     "minimist": "^1.2.8"
   },
   "devDependencies": {
     "@types/minimist": "^1.2.5",
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.9.3",
+    "@types/node": "^22.14.1",
     "mocha": "^11.1.0",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "typescript": "^5.8.3"
   }
 }

@@ -122,9 +122,13 @@ describe('MCP Server - Raw Functionality', () => {
         // Verify server is created
         assert.ok(server, 'Server should be created successfully');
 
-        // Check for basic server methods (public API only)
-        assert.ok(typeof server.connect === 'function', 'Server should have connect method');
-        assert.ok(typeof server.setRequestHandler === 'function', 'Server should have setRequestHandler method');
+        // Check for basic McpServer methods (public API only)
+        // Note: McpServer wraps the low-level Server, so connect might be on the inner server.
+        // Let's check for methods specific to McpServer like 'tool' or 'resource'.
+        assert.ok(typeof server.tool === 'function', 'McpServer should have tool method');
+        assert.ok(typeof server.resource === 'function', 'McpServer should have resource method');
+        // We can also check the underlying server's connect method if needed, but checking McpServer methods is better.
+        // assert.ok(typeof server.server.connect === 'function', 'Underlying server should have connect method');
     });
 
     // This test ensures the underlying knowledge graph functionality works

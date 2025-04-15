@@ -1,0 +1,26 @@
+{
+    "mcpServers": {
+        "memory": {
+            "command": "docker",
+            "args": [
+                "run",
+                "-i",
+                "mcp-knowledge-graph"
+            ],
+            "alwaysAllow": [
+                "create_entities",
+                "create_relations",
+                "add_observations",
+                "delete_entities",
+                "delete_observations",
+                "delete_relations",
+                "read_graph",
+                "search_nodes",
+                "open_nodes",
+                "update_entities",
+                "update_relations"
+            ],
+            "disabled": false
+        }
+    }
+}

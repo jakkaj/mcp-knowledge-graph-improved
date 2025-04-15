@@ -1,4 +1,4 @@
-.PHONY: build run npx-build clean test docker-build docker-test docker-test-full
+.PHONY: build run npx-build clean test docker-build docker-test docker-test-full docker-test-mcp
 
 build:
 	npm run build
@@ -18,7 +18,7 @@ clean:
 # Docker targets for building and testing the Docker image
 
 test-cli: build
-	echo '{"jsonrpc":"2.0","id":"1","method":"list_tools","params":{}}' | node dist/index.js --server
+	echo '{"jsonrpc":"2.0","id":"1","method":"listTools","params":{}}' | node dist/index.js --server
 
 docker-build:
 	docker build -t mcp-knowledge-graph .
@@ -33,3 +33,8 @@ docker-test-full:
 	@echo "2. Reading graph..."
 	@echo '{"jsonrpc":"2.0","id":"2","method":"call_tool","params":{"name":"read_graph","arguments":{}}}' | docker run -i --init mcp-knowledge-graph
 	@echo "Docker test complete"
+
+# MCP-compatible Docker test using StdioClientTransport
+docker-test-mcp: docker-build
+	@echo "Testing Docker container with MCP StdioClientTransport..."
+	node test-list-tools-docker.js
