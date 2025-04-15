@@ -5,7 +5,16 @@
             "args": [
                 "run",
                 "-i",
-                "mcp-knowledge-graph"
+                "--rm",
+                "--init",
+                "-v",
+                "./.roo:/data",
+                "mcp-knowledge-graph",
+                "node",
+                "dist/index.js",
+                "--server",
+                "--memory-path",
+                "/data/memory.json"
             ],
             "alwaysAllow": [
                 "create_entities",

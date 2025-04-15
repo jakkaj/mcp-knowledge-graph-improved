@@ -29,8 +29,18 @@ async function main() {
     const transport = new StdioClientTransport({
         command: "docker",
         args: [
-            "run", "--rm", "-i", "--init",
-            "mcp-knowledge-graph", // Docker image name from makefile
+            "run",
+            "-i",
+            "--rm",
+            "--init",
+            "-v",
+            "/home/jak/github/mcp-knowledge-graph-improved/.roo:/data",
+            "mcp-knowledge-graph",
+            "node",
+            "dist/index.js",
+            "--server",
+            "--memory-path",
+            "/data/memory.jsonl"
         ],
         // Optional: Add logging for the spawned process if needed
         // log: (level, message) => console.log(`[Transport ${level}] ${message}`)
@@ -58,6 +68,17 @@ async function main() {
             console.log(`Success! Found ${result.tools.length} tools in the response from Docker container.`);
         } else {
             console.error("Error: No tools found in the response from Docker container.");
+            process.exit(1);
+        }
+
+        // After the initial tools check, run the search_nodes tool and dump the output
+        try {
+            console.log('Calling search_nodes tool with query: "Search Functionality"...');
+            const searchResult = await client.callTool({ name: "search_nodes", arguments: { query: "Search Functionality" } });
+            console.log("search_nodes tool output:");
+            console.log(JSON.stringify(searchResult, null, 2));
+        } catch (err) {
+            console.error("Error calling search_nodes tool:", err);
             process.exit(1);
         }
     } catch (error) {

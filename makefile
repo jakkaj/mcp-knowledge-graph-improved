@@ -38,3 +38,8 @@ docker-test-full:
 docker-test-mcp: docker-build
 	@echo "Testing Docker container with MCP StdioClientTransport..."
 	node test-list-tools-docker.js
+
+
+test-mcp: build
+	@echo "Testing with MCP StdioClientTransport..."
+	node test-list-tools.js

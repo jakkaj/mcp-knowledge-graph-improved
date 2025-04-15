@@ -14,7 +14,7 @@ async function main() {
     // Set up the client transport to spawn and communicate with the server via stdio
     const transport = new StdioClientTransport({
         command: "node",
-        args: ["--no-warnings", "./dist/index.js", "--server"],
+        args: ["--no-warnings", "./dist/index.js", "--server", "--memory-path", "./.roo/memory.jsonl"],
         // Optional: Add logging for the spawned process if needed
         // log: (level, message) => console.log(`[Transport ${level}] ${message}`)
     });
@@ -41,6 +41,17 @@ async function main() {
             console.log(`Success! Found ${result.tools.length} tools in the response.`);
         } else {
             console.error("Error: No tools found in the response.");
+            process.exit(1);
+        }
+
+        // After the initial tools check, run the search_nodes tool and dump the output
+        try {
+            console.log('Calling search_nodes tool with query: "Freezed"...');
+            const searchResult = await client.callTool({ name: "search_nodes", arguments: { query: "Freezed" } });
+            console.log("search_nodes tool output:");
+            console.log(JSON.stringify(searchResult, null, 2));
+        } catch (err) {
+            console.error("Error calling search_nodes tool:", err);
             process.exit(1);
         }
     } catch (error) {
