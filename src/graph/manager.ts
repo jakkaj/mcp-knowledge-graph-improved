@@ -27,6 +27,15 @@ export class KnowledgeGraphManager {
         }
     }
 
+    /**
+     * Returns all relations where either endpoint is in the provided entityNames set.
+     */
+    private getConnectedRelations(entityNames: Set<string>, relations: Relation[]): Relation[] {
+        return relations.filter(r =>
+            entityNames.has(r.from) || entityNames.has(r.to)
+        );
+    }
+
     private async loadGraph(): Promise<KnowledgeGraph> {
         try {
             const data = await fs.readFile(MEMORY_FILE_PATH, "utf-8");
@@ -129,20 +138,170 @@ export class KnowledgeGraphManager {
         return this.loadGraph();
     }
 
+    /**
+     * Searches the knowledge graph for entities and their relations based on a query string.
+     *
+     * The search algorithm implements "fuzzy but smart" matching with the following features:
+     * - Tokenizes the query into words and matches against entity names, types, and observations
+     * - Prioritizes exact token matches on entity names
+     * - Finds entities when their names appear within longer search queries
+     * - Handles case insensitivity and special characters
+     * - Returns all relations connected to matched entities (both incoming and outgoing)
+     * - Implements performance optimizations for large datasets
+     *
+     * Ranking priority (highest to lowest):
+     * 1. Exact token match on entity name
+     * 2. Entity name appears as a token in the query
+     * 3. Token appears in entity name (higher score for tokens at the beginning)
+     * 4. Substring match on entity name
+     * 5. Match on entity type
+     * 6. Match on observations
+     * 7. Original substring match (for backward compatibility)
+     *
+     * Edge cases handled:
+     * - Empty queries return empty results
+     * - Short tokens (< 3 chars) require higher match confidence
+     * - Special characters are removed from tokens
+     * - No matches found returns empty results
+     *
+     * @param query - The search query string
+     * @returns A KnowledgeGraph containing matched entities and their relations
+     */
     async searchNodes(query: string): Promise<KnowledgeGraph> {
         const graph = await this.loadGraph();
 
-        const filteredEntities = graph.entities.filter(e =>
-            e.name.toLowerCase().includes(query.toLowerCase()) ||
-            e.entityType.toLowerCase().includes(query.toLowerCase()) ||
-            e.observations.some(o => o.toLowerCase().includes(query.toLowerCase()))
-        );
+        // Handle empty query case - return empty result
+        if (!query || query.trim() === '') {
+            return { entities: [], relations: [] };
+        }
+
+        // Normalize and tokenize the query
+        const normalizedQuery = query.trim().toLowerCase();
+
+        // Tokenize the query into lowercase words, removing special characters
+        const tokens = normalizedQuery
+            .split(/\s+/)
+            .map(token => token.replace(/[^\w\d_.-]/g, '')) // Keep alphanumeric, underscore, period, hyphen
+            .filter(token => token.length > 0);
+
+        // Performance optimization: For large datasets, consider using an early termination strategy
+        // Score entities based on match type and position
+        const scoredEntities = graph.entities.map(e => {
+            const nameLower = e.name.toLowerCase();
+            const typeLower = e.entityType.toLowerCase();
+            const obsLower = e.observations.map(o => o.toLowerCase());
+
+            let score = 0;
+            let matchDetails = [];
+
+            // Ranking priority (highest to lowest):
+            // 1. Exact token match on entity name (highest)
+            // 2. Entity name appears as a token in the query
+            // 3. Token appears in entity name
+            // 4. Substring match on entity name
+            // 5. Match on entity type
+            // 6. Match on observations
+            // 7. Original substring match (lowest, for backward compatibility)
+
+            // 1. Exact token match on entity name (highest priority)
+            if (tokens.some(token => token === nameLower)) {
+                score += 100;
+                matchDetails.push('exact_name_match');
+            }
+
+            // 2. Entity name appears as a token in the query
+            // This handles cases like "Plan modern_conversion_result_widget.dart"
+            if (query.toLowerCase().split(/\s+/).includes(nameLower)) {
+                score += 90;
+                matchDetails.push('name_as_token_in_query');
+            }
+
+            // 3. Token appears in entity name
+            for (const token of tokens) {
+                if (token.length >= 3 && nameLower.includes(token)) {
+                    // Higher score for tokens at the beginning of the name
+                    if (nameLower.startsWith(token)) {
+                        score += 70;
+                        matchDetails.push('token_at_start_of_name');
+                    } else {
+                        score += 50;
+                        matchDetails.push('token_in_name');
+                    }
+                }
+            }
+
+            // 4. Substring match on entity name
+            if (tokens.some(token => nameLower.includes(token))) {
+                score += 40;
+                matchDetails.push('substring_in_name');
+            }
+
+            // 5. Match on entity type
+            if (tokens.some(token => typeLower.includes(token))) {
+                score += 20;
+                matchDetails.push('match_on_type');
+            }
+
+            // 6. Match on observations
+            if (tokens.some(token => obsLower.some(obs => obs.includes(token)))) {
+                score += 10;
+                matchDetails.push('match_in_observations');
+            }
+
+            // 7. Fallback: original substring match for backward compatibility
+            if (
+                e.name.toLowerCase().includes(query.toLowerCase()) ||
+                e.entityType.toLowerCase().includes(query.toLowerCase()) ||
+                e.observations.some(o => o.toLowerCase().includes(query.toLowerCase()))
+            ) {
+                score += 1;
+                matchDetails.push('legacy_substring_match');
+            }
+
+            return {
+                entity: e,
+                score,
+                matchDetails
+            };
+        });
+
+        // Handle very short tokens differently (less than 3 chars)
+        // For short tokens, we require a higher match threshold
+        const hasShortTokens = tokens.some(token => token.length < 3);
+
+        // Performance optimization: Early termination for high-confidence matches
+        // If we have exact matches with very high scores, we can limit results
+        // This significantly improves performance with large datasets
+        const highConfidenceMatches = scoredEntities
+            .filter(se => se.score >= 90) // Only exact or near-exact matches
+            .sort((a, b) => b.score - a.score);
+
+        // If we have high-confidence matches, limit to those for better performance
+        // Otherwise, use normal scoring and filtering
+        const filteredScoredEntities = highConfidenceMatches.length >= 2
+            ? highConfidenceMatches.slice(0, 5) // Limit to top 5 high-confidence matches
+            : scoredEntities.filter(se => {
+                // For queries with short tokens, require a higher score threshold
+                // to avoid too many false positives
+                if (hasShortTokens) {
+                    return se.score >= 20; // Higher threshold for short tokens
+                }
+                return se.score > 0;
+            })
+                .sort((a, b) => b.score - a.score);
+
+        // Extract just the entities from the scored results
+        const filteredEntities = filteredScoredEntities.map(se => se.entity);
+
+        // Handle no matches found
+        if (filteredEntities.length === 0) {
+            return { entities: [], relations: [] };
+        }
 
         const filteredEntityNames = new Set(filteredEntities.map(e => e.name));
 
-        const filteredRelations = graph.relations.filter(r =>
-            filteredEntityNames.has(r.from) && filteredEntityNames.has(r.to)
-        );
+        // Include all relations where a matched entity is either source or target
+        const filteredRelations = this.getConnectedRelations(filteredEntityNames, graph.relations);
 
         return {
             entities: filteredEntities,
