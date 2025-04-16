@@ -116,6 +116,28 @@ describe('KnowledgeGraphManager Search', () => {
         assert(result.relations.some(r => r.from === 'legacy_widget.dart' && r.to === 'modern_conversion_result_widget.dart'), 'Should include legacy_widget.dart -> modern_conversion_result_widget.dart');
     });
 
+    it('should return no relations when only the entity exists (validates user-reported scenario)', async () => {
+        // Set up only the entity, no relations
+        await fs.writeFile(testMemoryPath, '');
+        manager = new KnowledgeGraphManager(testMemoryPath);
+        await manager.createEntities([
+            {
+                name: 'modern_conversion_result_widget.dart',
+                entityType: 'SourceFile',
+                observations: [
+                    'Widget for redesigned conversion results UI',
+                    'Located at pilot_buddy_app/lib/features/home/widgets/modern_conversion_result_widget.dart'
+                ],
+                createdAt: '2025-04-16T01:13:56.320Z',
+                version: 1
+            }
+        ]);
+        const result = await manager.searchNodes('modern_conversion_result_widget.dart');
+        assert.strictEqual(result.entities.length, 1, 'Should find exactly one entity');
+        assert.strictEqual(result.entities[0].name, 'modern_conversion_result_widget.dart');
+        assert.strictEqual(result.relations.length, 0, 'Should return no relations when only the entity exists');
+    });
+
     it('should return relations for both incoming and outgoing connections (expected to fail until improved)', async () => {
         // Add a new entity and a relation from modern_conversion_result_widget.dart to Plan
         const newEntity: Entity = {

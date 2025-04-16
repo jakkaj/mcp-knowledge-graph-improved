@@ -20,6 +20,9 @@ clean:
 test-cli: build
 	echo '{"jsonrpc":"2.0","id":"1","method":"listTools","params":{}}' | node dist/index.js --server
 
+query-memory:
+	node query-memory.js "modern_conversion_result_widget.dart"
+
 docker-build:
 	docker build -t mcp-knowledge-graph .
 
