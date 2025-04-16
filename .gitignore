@@ -51,9 +51,7 @@ coverage/
 # Optional eslint cache
 .eslintcache
 
-# Memory files (except examples)
-*.jsonl
-!example*.jsonl
+
 
 # Local documentation
 PUBLISHING.md

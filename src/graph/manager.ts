@@ -1,7 +1,13 @@
 import { promises as fs } from 'fs';
+import * as fsSync from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { Entity, Relation, KnowledgeGraph } from '../types/knowledge-graph.js';
+
+// For debug logging
+const debugLog = (message: string) => {
+    fsSync.appendFileSync('/tmp/mcp-debug.log', message + '\n');
+};
 
 // Configuration for file paths
 let MEMORY_FILE_PATH: string;
@@ -31,6 +37,18 @@ export class KnowledgeGraphManager {
      * Returns all relations where either endpoint is in the provided entityNames set.
      */
     private getConnectedRelations(entityNames: Set<string>, relations: Relation[]): Relation[] {
+        debugLog(`[DEBUG] getConnectedRelations called with ${entityNames.size} entity names and ${relations.length} relations`);
+
+        // Check for specific entity we're debugging
+        if (entityNames.has('modern_conversion_result_widget.dart')) {
+            debugLog(`[DEBUG] Looking for relations involving 'modern_conversion_result_widget.dart'`);
+            const relevantRelations = relations.filter(r =>
+                r.from === 'modern_conversion_result_widget.dart' || r.to === 'modern_conversion_result_widget.dart'
+            );
+            debugLog(`[DEBUG] Found ${relevantRelations.length} relations directly involving 'modern_conversion_result_widget.dart':`);
+            relevantRelations.forEach(r => debugLog(`  - ${r.from} -> ${r.to} (${r.relationType})`));
+        }
+
         return relations.filter(r =>
             entityNames.has(r.from) || entityNames.has(r.to)
         );
@@ -168,7 +186,9 @@ export class KnowledgeGraphManager {
      * @returns A KnowledgeGraph containing matched entities and their relations
      */
     async searchNodes(query: string): Promise<KnowledgeGraph> {
+        debugLog(`\n[DEBUG] searchNodes called with query: "${query}"`);
         const graph = await this.loadGraph();
+        debugLog(`[DEBUG] Total entities in graph: ${graph.entities.length}, Total relations: ${graph.relations.length}`);
 
         // Handle empty query case - return empty result
         if (!query || query.trim() === '') {
@@ -292,16 +312,26 @@ export class KnowledgeGraphManager {
 
         // Extract just the entities from the scored results
         const filteredEntities = filteredScoredEntities.map(se => se.entity);
+        debugLog(`[DEBUG] Matched entities (${filteredEntities.length}):`);
+        filteredEntities.forEach(e => debugLog(`  - ${e.name} (${e.entityType})`));
 
         // Handle no matches found
         if (filteredEntities.length === 0) {
+            debugLog(`[DEBUG] No entities matched the query`);
             return { entities: [], relations: [] };
         }
 
         const filteredEntityNames = new Set(filteredEntities.map(e => e.name));
+        debugLog(`[DEBUG] Entity names used for relation filtering: ${Array.from(filteredEntityNames).join(', ')}`);
 
         // Include all relations where a matched entity is either source or target
+        debugLog(`[DEBUG] Searching for relations connected to matched entities...`);
+        debugLog(`[DEBUG] Sample of relations in graph (first 5):`);
+        graph.relations.slice(0, 5).forEach(r => debugLog(`  - ${r.from} -> ${r.to} (${r.relationType})`));
+
         const filteredRelations = this.getConnectedRelations(filteredEntityNames, graph.relations);
+        debugLog(`[DEBUG] Found ${filteredRelations.length} connected relations`);
+        filteredRelations.forEach(r => debugLog(`  - ${r.from} -> ${r.to} (${r.relationType})`));
 
         return {
             entities: filteredEntities,
