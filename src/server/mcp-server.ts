@@ -12,8 +12,8 @@ export const createServer = (memoryPath?: string) => {
     const knowledgeGraphManager = new KnowledgeGraphManager(memoryPath);
     // Create the McpServer instance with metadata
     const server = new McpServer({
-        name: "@itseasy21/mcp-knowledge-graph",
-        version: "1.0.7",
+        name: "@jakkaj/mcp-knowledge-graph-improved",
+        version: "2.0.0",
     });
 
     // --- Register tools using McpServer.tool() ---
