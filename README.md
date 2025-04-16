@@ -10,8 +10,14 @@ Knowledge Graph MCP is tailored for software engineering workflows within tools 
 When working with LLM coding agents you might notice a few different things. 
 
 - It can be hard to get what you want -> you need need a solid plan (see below)
-- Their contexts are short, and even when tehy are not (looking at you Cline and Roo), they tend to get less accurate with long contexts -> you need to be able to finish a phase, clear the chat and start the next phase with a fresh and empty context window
+- LLM contexts are short, and even when they are not (looking at you Cline and Roo), they tend to get less accurate with long contexts (not to mention it gets expensive!) -> you need to be able to finish a phase, clear the chat and start the next phase with a fresh and empty context window
+- When you switch to a new task, the agent forgets why we did a thing!
+  - Why we made architectural decisions
+  - What are the non-negotiables in system architecture
+  - Generally speaking what were we thinking at the time, context is king! It could be handy to leave yourself some breadcrumbs!
 
+
+This knowledge graph MCP server coupled with a decent LLM coding agent rules file is an interesting take on how to solve some of these problems. 
 
 
 
@@ -81,27 +87,11 @@ Example:
 }
 ```
 
-## API
-
-### Tools
-
-- **create_entities**
-  - Create multiple new entities in the knowledge graph
-  - Input: `entities` (array of objects)
-    - Each object contains:
-      - `name` (string): Entity identifier
-      - `entityType` (string): Type classification
-      - `observations` (string[]): Associated observations
-  - Ignores entities with existing names
-
-<!-- Insert clarification about alwaysAllow in the config explanation section, not here. No change needed in the API tool list. -->
 ## Usage with Cursor, Cline or Claude Desktop
 
 > **Note:** The Docker image must be built locally as described in the "Running with Docker" section below. The `-v` argument should point to a directory on your host where you want to persist memory (e.g., your project's `.roo` directory).
 
 ### Setup
-
-> **Note:** Before setting up the configuration, you'll need to first [build the Docker image](#build-the-docker-image) as described in the "Running with Docker" section.
 
 Add this to your `mcp.json` or `claude_desktop_config.json` to use the Docker-based server:
 
@@ -125,23 +115,14 @@ Add this to your `mcp.json` or `claude_desktop_config.json` to use the Docker-ba
         "/data/memory.jsonl"
       ],
       "alwaysAllow": [
-        "create_entities",
-        "create_relations",
-        "add_observations",
-        "delete_entities",
-        "delete_observations",
-        "delete_relations",
-        "read_graph",
-        "search_nodes",
-        "open_nodes",
-        "update_entities",
-        "update_relations"
+        
       ],
       "disabled": false
     }
   }
 }
 ```
+
 
 #### Field Explanations
 
@@ -200,7 +181,7 @@ To specify a custom path for the memory file when using Docker, set the `--memor
 - The `--memory-path` argument specifies the location of the memory file inside the container (e.g., `/data/custom-memory.jsonl`).
 - The `-v` argument mounts your host directory (e.g., `.roo`) to `/data` in the container, ensuring persistence.
 
-If no path is specified, it will default to `memory.jsonl` in the server's installation directory inside the container.
+If no path is specified, it will default to `memory.jsonl` in the server's installation directory inside the container. I.e. it will *not* persist. 
 
 ---
 
@@ -220,91 +201,12 @@ or
 make docker-build
 ```
 
-#### Run the Server
-
-To run the server and persist memory to a local file, mount a directory from your host into the container. For example, to store memory in `.roo/memory.jsonl`:
-
-```bash
-docker run -i --rm --init \
-  -v $(pwd)/.roo:/data \
-  mcp-knowledge-graph \
-  node dist/index.js --server --memory-path /data/memory.jsonl
-```
-
-- `-v $(pwd)/.roo:/data` mounts your local `.roo` directory to `/data` in the container.
-- `--memory-path /data/memory.jsonl` tells the server to use the mounted file for persistent memory.
-
-You can adjust the mount path and memory file location as needed.
-
----
-
-### Using with Roo and Cline (.roo/mcp.json)
-
-To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) or [Cline](https://github.com/modelcontextprotocol/cline), configure your `.roo/mcp.json` file to point to the Dockerized server.
-
-#### Example `.roo/mcp.json`
-
-```json
-{
-  "mcpServers": {
-    "memory": {
-      "command": "docker",
-      "args": [
-        "run",
-        "-i",
-        "--rm",
-        "--init",
-        "-v",
-        "/absolute/path/to/.roo:/data",
-        "mcp-knowledge-graph",
-        "node",
-        "dist/index.js",
-        "--server",
-        "--memory-path",
-        "/data/memory.jsonl"
-      ],
-      "alwaysAllow": [
-        "create_entities",
-        "create_relations",
-        "add_observations",
-        "delete_entities",
-        "delete_observations",
-        "delete_relations",
-        "read_graph",
-        "search_nodes",
-        "open_nodes",
-        "update_entities",
-        "update_relations"
-      ],
-      "disabled": false
-    }
-  }
-}
-```
-
-#### Field Explanations
-
-- **mcpServers**: Top-level object mapping server names to configurations.
-- **memory**: The name used to reference this server in Roo/Cline.
-- **command**: The executable to launch the server (`docker` in this case).
-- **args**: Arguments to pass to the command. This example runs the Docker container, mounts the `.roo` directory, and starts the server with a persistent memory file.
-- **alwaysAllow**: List of tool names that Roo/Cline can always invoke on this server.
-- **disabled**: Set to `false` to enable the server.
-
-#### Usage
-
-- Place this file at `.roo/mcp.json` in your project or home directory.
-- Make sure the volume mount path in `args` matches your local setup.
-- When you use Roo or Cline, they will automatically start the MCP server in Docker and connect to it.
-- You can add multiple servers under `mcpServers` if needed.
-
-
 
 ### Example Developer Workflow Prompt
 
 The prompt for utilizing memory depends on your use case. Below is a comprehensive example of using the knowledge graph memory server in a software development context, which you can add to your `.clinerules` file or custom instructions for AI tools like Roo, Cline, or Claude.
 
-This example workflow demonstrates how to structure and organize a development process that leverages the knowledge graph for maintaining contextual awareness across a project.
+This example workflow demonstrates how to structure and organise a development process that leverages the knowledge graph for maintaining contextual awareness across a project.
 
 > **Note:** This is just one possible workflow approach. You can adapt these guidelines to fit your team's specific needs and development practices.
 
@@ -389,10 +291,10 @@ This comprehensive developer workflow integrates several key practices into a co
    - Consistent organization across all project plans
    - Clear tracking of progress through checklists
    - Proper documentation of implementation requirements
-   - Centralized storage in the docs/plans directory
+   - Centralised storage in the docs/plans directory
 
 2. **Following Plans** enforces discipline in the development process by:
-   - Requiring developers to follow the established sequence
+   - Requiring developers and LLMs to follow the established sequence
    - Ensuring tasks are properly completed before moving forward
    - Verifying quality through test completion requirements
    - Maintaining an accurate record of implementation progress
@@ -411,16 +313,8 @@ This comprehensive developer workflow integrates several key practices into a co
    - Maintaining accurate path information and descriptive names
    - Creating a traceable history of implementation decisions
 
-Together, these elements form a structured approach to development that preserves context, enforces good practices, and creates a knowledge base that grows with the project. The memory graph becomes a living documentation system that captures not just what was changed, but why changes were made and how they relate to the overall project architecture.
+Above all however this saves time and money. The LLM coding agent is able to quickly look up context, and it's like its continuing off where it left off last time... or time before that. Or the time before that. 
 
-This approach is particularly valuable for:
-- Onboarding new team members who need to understand project history
-- Maintaining context across complex, long-running projects
-- Ensuring consistent implementation of architectural decisions
-- Creating an auditable trail of development decisions
-- Enabling AI assistants to provide more contextually relevant help
-
-By integrating planning, knowledge management, and change tracking, teams can maintain a consistent understanding of their codebase's evolution and make more informed decisions throughout the development lifecycle.
 
 ## License
 
