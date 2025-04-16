@@ -292,15 +292,17 @@ This comprehensive developer workflow integrates several key practices into a co
    - Clear tracking of progress through checklists
    - Proper documentation of implementation requirements
    - Centralised storage in the docs/plans directory
+   - Comprehendible to AI agents and humans. You can pair!
 
 2. **Following Plans** enforces discipline in the development process by:
    - Requiring developers and LLMs to follow the established sequence
    - Ensuring tasks are properly completed before moving forward
    - Verifying quality through test completion requirements
    - Maintaining an accurate record of implementation progress
+   - Plans can be resumed after resetting context window. 
 
 3. **Memory Knowledge Graph Workflow** ensures the knowledge graph becomes a comprehensive representation of the codebase by establishing:
-   - A retrieval process that makes developers consult existing knowledge first
+   - A retrieval process that makes LLM developers consult existing knowledge first, rather than burning cycles (and $) figuring it out *again*
    - Specific triggers for when the knowledge graph must be updated
    - Quality standards for entities, observations, and relations
    - Consistent patterns for knowledge representation
@@ -308,7 +310,7 @@ This comprehensive developer workflow integrates several key practices into a co
 
 4. **File Change Tracking** creates a historical record of significant code changes by:
    - Documenting substantive modifications with proper context
-   - Linking changes to source files and plans
+   - Linking changes to source files and plans (this one is super handy for figuring out what we were thinking at the time!)
    - Focusing on meaningful changes rather than trivial edits
    - Maintaining accurate path information and descriptive names
    - Creating a traceable history of implementation decisions
