@@ -189,17 +189,106 @@ If no path is specified, it will default to `memory.jsonl` in the server's insta
 
 You can run the Knowledge Graph Memory Server in a Docker container for easy deployment and isolation.
 
-#### Build the Docker Image
+#### Option 1: Build the Docker Image Locally
+
+If you want to build the image yourself, you can use the following commands:
 
 ```bash
-docker build -t mcp-knowledge-graph .
+docker build -t jakkaj/mcp-knowledge-graph .
 ```
 
-or
+or using the Makefile:
 
 ```sh
 make docker-build
 ```
+
+#### Option 2: Pull the Image from Docker Hub
+
+Alternatively, you can pull the pre-built image directly from Docker Hub:
+
+```bash
+docker pull jakkaj/mcp-knowledge-graph
+```
+
+#### Run the Server
+
+Once you have the image (either built locally or pulled from Docker Hub), you can run the server. To persist memory to a local file, mount a directory from your host into the container. For example, to store memory in `.roo/memory.jsonl`:
+
+```bash
+docker run -i --rm --init \
+  -v $(pwd)/.roo:/data \
+  jakkaj/mcp-knowledge-graph \
+  node dist/index.js --server --memory-path /data/memory.jsonl
+```
+
+- `-v $(pwd)/.roo:/data` mounts your local `.roo` directory to `/data` in the container.
+- `--memory-path /data/memory.jsonl` tells the server to use the mounted file for persistent memory.
+
+You can adjust the mount path and memory file location as needed.
+
+---
+
+### Using with Roo and Cline (.roo/mcp.json)
+
+To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) or [Cline](https://github.com/modelcontextprotocol/cline), configure your `.roo/mcp.json` file to point to the Dockerized server. Make sure to use the correct image name (`jakkaj/mcp-knowledge-graph`) whether you built it locally or pulled it.
+
+#### Example `.roo/mcp.json`
+
+```json
+{
+  "mcpServers": {
+    "memory": {
+      "command": "docker",
+      "args": [
+        "run",
+        "-i",
+        "--rm",
+        "--init",
+        "-v",
+        "/absolute/path/to/.roo:/data",
+        "jakkaj/mcp-knowledge-graph", // Use the correct image name
+        "node",
+        "dist/index.js",
+        "--server",
+        "--memory-path",
+        "/data/memory.jsonl"
+      ],
+      "alwaysAllow": [
+        "create_entities",
+        "create_relations",
+        "add_observations",
+        "delete_entities",
+        "delete_observations",
+        "delete_relations",
+        "read_graph",
+        "search_nodes",
+        "open_nodes",
+        "update_entities",
+        "update_relations"
+      ],
+      "disabled": false
+    }
+  }
+}
+```
+
+#### Field Explanations
+
+- **mcpServers**: Top-level object mapping server names to configurations.
+- **memory**: The name used to reference this server in Roo/Cline.
+- **command**: The executable to launch the server (`docker` in this case).
+- **args**: Arguments to pass to the command. This example runs the Docker container, mounts the `.roo` directory, and starts the server with a persistent memory file.
+- **alwaysAllow**: List of tool names that Roo/Cline can always invoke on this server.
+- **disabled**: Set to `false` to enable the server.
+
+#### Usage
+
+- Place this file at `.roo/mcp.json` in your project or home directory.
+- Make sure the volume mount path in `args` matches your local setup.
+- When you use Roo or Cline, they will automatically start the MCP server in Docker and connect to it.
+- You can add multiple servers under `mcpServers` if needed.
+
 
 
 ### Example Developer Workflow Prompt
@@ -282,6 +371,7 @@ Detailed plan available at: `docs/plans/memory_usage/file_change_tracking.md`
 - Keep file paths accurate and use present tense for descriptions
 - Update SourceFile entities when understanding of file purpose changes
 ```
+
 
 ### Understanding the Developer Workflow
 
