@@ -21,6 +21,16 @@ This knowledge graph MCP server coupled with a decent LLM coding agent rules fil
 
 
 
+## Development Setup
+
+**Using the provided Dev Container is required for all development on this project.** This ensures a consistent and reproducible environment for everyone.
+
+1.  **Prerequisites:** Ensure you have Docker, VS Code, and the Remote - Containers extension installed.
+2.  **Clone & Open:** Clone this repository and open it in VS Code.
+3.  **Reopen in Container:** Use the prompt or the Command Palette (`Remote-Containers: Reopen in Container`) to open the project in the Dev Container.
+4.  **Build:** Once the container is ready, build the project using `make build`.
+
+For detailed setup instructions, contribution guidelines, and workflow, please see the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 ## Knowlege Graph Core Concepts
 
 ### Entities
@@ -288,6 +298,53 @@ To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) o
 - Make sure the volume mount path in `args` matches your local setup.
 - When you use Roo or Cline, they will automatically start the MCP server in Docker and connect to it.
 - You can add multiple servers under `mcpServers` if needed.
+
+##### Note for Dev Container Users (Docker-outside-of-Docker)
+
+If you are running your development environment (like VS Code with Roo/Cline) inside a dev container that uses the "Docker-outside-of-Docker" feature, the Docker commands with -v (volume mounts) are based on your *host* machine, not inside the container. Therefore, the volume mount path in your `mcp.json` needs to be the *host's* absolute path to your project's `.roo` directory.
+
+To make this work dynamically, you can define an environment variable in your `devcontainer.json` and use it in your `mcp.json`:
+
+1.  **In `.devcontainer/devcontainer.json`:** Add the `HOST_PROJECT_PATH` to `remoteEnv`:
+
+    ```json
+    {
+      // ... other devcontainer settings ...
+      "remoteEnv": {
+        "HOST_PROJECT_PATH": "${localWorkspaceFolder}"
+      }
+      // ... other devcontainer settings ...
+    }
+    ```
+
+2.  **In `.roo/mcp.json`:** Use the environment variable in the `args` for the volume mount:
+
+    ```json
+    {
+      "mcpServers": {
+        "memory": {
+          "command": "docker",
+          "args": [
+            "run",
+            "-i",
+            "--rm",
+            "--init",
+            "-v",
+            "$HOST_PROJECT_PATH/.roo:/data", // Use the host path variable
+            "jakkaj/mcp-knowledge-graph",
+            "node",
+            "dist/index.js",
+            "--server",
+            "--memory-path",
+            "/data/memory.jsonl"
+          ],
+          // ... rest of the configuration ...
+        }
+      }
+    }
+    ```
+
+This ensures that Docker, running on the host, correctly mounts the project's `.roo` directory from the host filesystem into the `jakkaj/mcp-knowledge-graph` container.
 
 
 

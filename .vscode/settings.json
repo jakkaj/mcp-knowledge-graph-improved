@@ -1,0 +1,24 @@
+{
+    "mcp": {
+        "inputs": [],
+        "servers": {
+            "memory": {
+                "command": "docker",
+                "args": [
+                    "run",
+                    "-i",
+                    "--rm",
+                    "--init",
+                    "-v",
+                    "/workspaces/mcp-knowledge-graph-improved/.roo:/data",
+                    "jakkaj/mcp-knowledge-graph",
+                    "node",
+                    "dist/index.js",
+                    "--server",
+                    "--memory-path",
+                    "/data/memory.jsonl"
+                ]
+            }
+        }
+    }
+}
