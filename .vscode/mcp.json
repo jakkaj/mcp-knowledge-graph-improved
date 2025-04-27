@@ -1,5 +1,6 @@
 {
-    "mcpServers": {
+    "inputs": [],
+    "servers": {
         "memory": {
             "command": "docker",
             "args": [
@@ -15,21 +16,7 @@
                 "--server",
                 "--memory-path",
                 "/data/memory.jsonl"
-            ],
-            "alwaysAllow": [
-                "create_entities",
-                "create_relations",
-                "add_observations",
-                "delete_entities",
-                "delete_observations",
-                "delete_relations",
-                "read_graph",
-                "search_nodes",
-                "open_nodes",
-                "update_entities",
-                "update_relations"
-            ],
-            "disabled": false
+            ]
         },
         "github": {
             "command": "docker",
@@ -38,10 +25,10 @@
                 "-i",
                 "--rm",
                 "--env-file",
-                ".devcontainer/devcontainer.env",
+                "/workspaces/mcp-knowledge-graph-improved/.devcontainer/devcontainer.env",
                 "ghcr.io/github/github-mcp-server"
             ],
             "env": {}
         }
-    }
+    },
 }

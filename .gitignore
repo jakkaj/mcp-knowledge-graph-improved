@@ -38,6 +38,7 @@ coverage/
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
+!.vscode/mcp.json
 *.swp
 *.swo
 .DS_Store
@@ -71,3 +72,4 @@ VERSION_UPDATE.md
 .Trashes
 ehthumbs.db
 Thumbs.db
+.devcontainer/devcontainer.env

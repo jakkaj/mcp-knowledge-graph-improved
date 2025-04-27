@@ -35,7 +35,7 @@ async function main() {
             "--init",
             "-v",
             "/home/jak/github/mcp-knowledge-graph-improved/.roo:/data",
-            "mcp-knowledge-graph",
+            "jakkaj/mcp-knowledge-graph",
             "node",
             "dist/index.js",
             "--server",

@@ -15,7 +15,8 @@
 			"userUid": "automatic",
 			"userGid": "automatic"
 		},
-		"ghcr.io/devcontainers/features/docker-in-docker:2": {}
+		"ghcr.io/devcontainers/features/docker-in-docker:2": {},
+		"ghcr.io/devcontainers/features/github-cli:1": {}
 	},
 	"customizations": {
 		"vscode": {
@@ -29,7 +30,9 @@
 		"source=${localEnv:HOME}${localEnv:USERPROFILE}/.ssh,target=/home/node/.ssh,type=bind,consistency=cached"
 	],
 	"runArgs": [
-		"--network=host"
+		"--network=host",
+		"--env-file",
+		".devcontainer/devcontainer.env"
 	]
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	// "features": {},
