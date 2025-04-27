@@ -22,6 +22,10 @@
 {"type":"entity","name":"Dockerfile","entityType":"ConfigurationFile","observations":["Defines the Docker image for the MCP server."],"createdAt":"2025-04-27T01:05:20.230Z","version":1}
 {"type":"entity","name":"makefile","entityType":"ConfigurationFile","observations":["Defines build, test, and run commands for the project."],"createdAt":"2025-04-27T01:05:20.230Z","version":1}
 {"type":"entity","name":"package.json","entityType":"ConfigurationFile","observations":["Specifies project metadata, dependencies, and npm scripts."],"createdAt":"2025-04-27T01:05:20.230Z","version":1}
+{"type":"entity","name":"GitHub Actions CI/CD","entityType":"Component","observations":["Automated CI/CD pipeline using GitHub Actions","Includes build, test, and release workflows","Uses semantic-release for version management and GitHub releases","Configured for Docker image building and publishing"],"createdAt":"2025-04-27T02:54:21.468Z","version":1}
+{"type":"entity","name":".github/workflows/release.yml","entityType":"ConfigurationFile","observations":["GitHub Actions workflow for automated releases","Triggered on pushes to the main branch","Uses semantic-release for versioning and GitHub releases","Builds and publishes Docker images with version tags"],"createdAt":"2025-04-27T02:54:21.468Z","version":1}
+{"type":"entity","name":".releaserc.json","entityType":"ConfigurationFile","observations":["Configuration for semantic-release","Defines plugins for commit analysis, release notes, and GitHub releases","Configured to release only on the main branch","No npm publishing to avoid NPM_TOKEN requirements"],"createdAt":"2025-04-27T02:54:21.468Z","version":1}
+{"type":"entity","name":"docs/ci-cd.md","entityType":"Documentation","observations":["Documentation for the CI/CD pipeline","Explains GitHub Actions workflows and semantic-release configuration","Details Docker image building and release processes","Provides guidance on creating conventional commits for automated releases"],"createdAt":"2025-04-27T02:54:21.468Z","version":1}
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"CLI Interface","relationType":"CONTAINS","createdAt":"2025-04-27T01:04:46.396Z","version":1}
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"Knowledge Graph Manager","relationType":"CONTAINS","createdAt":"2025-04-27T01:04:46.396Z","version":1}
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"MCP Server Implementation","relationType":"CONTAINS","createdAt":"2025-04-27T01:04:46.396Z","version":1}
@@ -45,3 +49,10 @@
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"Dockerfile","relationType":"HAS_CONFIGURATION","createdAt":"2025-04-27T01:05:26.507Z","version":1}
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"makefile","relationType":"HAS_CONFIGURATION","createdAt":"2025-04-27T01:05:26.507Z","version":1}
 {"type":"relation","from":"mcp-knowledge-graph-improved","to":"package.json","relationType":"HAS_CONFIGURATION","createdAt":"2025-04-27T01:05:26.507Z","version":1}
+{"type":"relation","from":"mcp-knowledge-graph-improved","to":"GitHub Actions CI/CD","relationType":"IMPLEMENTS","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"GitHub Actions CI/CD","to":".github/workflows/release.yml","relationType":"CONFIGURED_IN","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"GitHub Actions CI/CD","to":".releaserc.json","relationType":"CONFIGURED_IN","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"GitHub Actions CI/CD","to":"docs/ci-cd.md","relationType":"DOCUMENTED_IN","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"mcp-knowledge-graph-improved","to":".github/workflows/release.yml","relationType":"HAS_CONFIGURATION","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"mcp-knowledge-graph-improved","to":".releaserc.json","relationType":"HAS_CONFIGURATION","createdAt":"2025-04-27T02:54:34.470Z","version":1}
+{"type":"relation","from":"mcp-knowledge-graph-improved","to":"docs/ci-cd.md","relationType":"HAS_DOCUMENTATION","createdAt":"2025-04-27T02:54:34.470Z","version":1}
