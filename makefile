@@ -1,4 +1,4 @@
-.PHONY: build run npx-build clean test docker-build docker-test docker-test-full docker-test-mcp
+.PHONY: build run npx-build clean test test-local docker-build docker-test docker-test-full docker-test-mcp
 
 build:
 	npm run build
@@ -8,6 +8,9 @@ run:
 
 test:
 	npm test
+
+test-local:
+	npm run test:local
 
 npx-build: build
 	npm pack

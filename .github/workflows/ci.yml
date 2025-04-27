@@ -23,7 +23,14 @@ jobs:
 
       - name: Run unit tests
         run: make test
-        
+
+      - name: Publish Unit Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: test-results/test-results.xml
+          
       - name: Build Docker image
         run: make docker-build
 
@@ -38,3 +45,28 @@ jobs:
             echo "Docker MCP test failed - did not find expected patterns in output"
             exit 1
           fi
+
+      - name: Publish Docker Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-test-results
+          path: test-results/docker-test-results.xml
+
+      - name: Mocha Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Mocha Tests            # Name of the check run which will be created
+          path: test-results/test-results.xml
+          reporter: java-junit         # Format of test results
+          fail-on-error: true
+          
+      - name: Docker Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Docker MCP Tests       # Name of the check run which will be created
+          path: test-results/docker-test-results.xml
+          reporter: java-junit         # Format of test results
+          fail-on-error: true

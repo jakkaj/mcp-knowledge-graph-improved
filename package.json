@@ -17,7 +17,8 @@
     "prepare": "npm run build",
     "watch": "tsc --watch",
     "start": "node dist/index.js",
-    "test": "NODE_OPTIONS=\"--loader=ts-node/esm\" mocha \"src/**/*.test.ts\"",
+    "test": "NODE_OPTIONS=\"--loader=ts-node/esm\" mocha \"src/**/*.test.ts\" --reporter mocha-junit-reporter --reporter-options mochaFile=test-results/test-results.xml",
+    "test:local": "NODE_OPTIONS=\"--loader=ts-node/esm\" mocha \"src/**/*.test.ts\"",
     "semantic-release": "semantic-release"
   },
   "dependencies": {
@@ -33,10 +34,13 @@
     "@types/minimist": "^1.2.5",
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.14.1",
+    "@types/uuid": "^10.0.0",
     "mocha": "^11.1.0",
+    "mocha-junit-reporter": "^2.2.1",
     "semantic-release": "^22.0.12",
     "shx": "^0.3.4",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "uuid": "^11.1.0"
   }
 }
