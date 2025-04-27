@@ -63,6 +63,16 @@ This phase focuses on creating a workflow that automatically runs checks on ever
     *   Success Criteria: The CI job includes steps for `make docker-test-mcp` and output validation. The workflow job fails if the test or validation fails.
     *   Status: `- [x]`
 
+*   **Task 1.11:** Fix Test Issues for CI Compatibility *(Additional Task)*
+    *   Action: Identify and fix any test issues that cause failures in the CI environment but pass locally. Add debug output as needed.
+    *   Success Criteria: All tests pass successfully in the GitHub Actions environment, and the workflow job completes with a successful status.
+    *   Status: `- [x]`
+
+*   **Task 1.12:** Test and Verify Workflow *(Additional Task)*
+    *   Action: Create a pull request to trigger the workflow and verify that it runs and completes successfully.
+    *   Success Criteria: The GitHub Actions workflow is triggered by the pull request and all steps complete successfully.
+    *   Status: `- [x]`
+
 ### Phase 2: Automated Release Workflow Setup (Push to Main)
 
 This phase is revised for automatic release triggered by pushes to main.
@@ -159,6 +169,8 @@ This phase is revised for automatic release triggered by pushes to main.
 - [x] Task 1.8: Add Unit Test Step
 - [x] Task 1.9: Add Docker Build Step
 - [x] Task 1.10: Add Docker MCP Test Step
+- [x] Task 1.11: Fix Test Issues for CI Compatibility *(Additional Task)*
+- [x] Task 1.12: Test and Verify Workflow *(Additional Task)*
 
 **Phase 2: Automated Release Workflow**
 - [ ] Task 2.1: Create Release Workflow File
