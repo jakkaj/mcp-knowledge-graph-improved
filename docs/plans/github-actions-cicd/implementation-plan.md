@@ -80,79 +80,79 @@ This phase is revised for automatic release triggered by pushes to main.
 *   **Task 2.1:** Create Release Workflow File
     *   Action: Create a new file named `release.yml` inside `.github/workflows/`.
     *   Success Criteria: The file `.github/workflows/release.yml` exists.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.2:** Define Release Workflow Triggers *(Revised)*
     *   Action: Configure `release.yml` to trigger on `push` events to the `main` branch. Add path filters if needed.
     *   Success Criteria: `release.yml` contains `on: push: branches: [ main ]`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.3:** Define Release Job Environment and Permissions *(Revised)*
     *   Action: Configure the release job (`runs-on: ubuntu-latest`). Grant necessary permissions: `contents: write`, `issues: write`, `pull-requests: write`, `packages: write`.
     *   Success Criteria: The release job in `release.yml` specifies `runs-on: ubuntu-latest` and has the required `permissions`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.4:** Add Code Checkout Step (Full History)
     *   Action: Use `actions/checkout@v4` with `fetch-depth: 0`.
     *   Success Criteria: `release.yml` includes `actions/checkout@v4` with `fetch-depth: 0`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.5:** Add Node.js Setup Step
     *   Action: Use `actions/setup-node@v4` with caching.
     *   Success Criteria: `release.yml` includes steps for Node.js setup and npm caching.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.6:** Add Dependency Installation Step
     *   Action: Add a step to run `npm ci`.
     *   Success Criteria: `release.yml` includes a step executing `npm ci`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.7:** Run Semantic Release *(New)*
     *   Action: Use an action like `cycjimmy/semantic-release-action@v4` or configure `npx semantic-release`. Configure plugins (`@semantic-release/commit-analyzer`, `@semantic-release/release-notes-generator`, `@semantic-release/npm`, `@semantic-release/github`). Pass necessary tokens (`GITHUB_TOKEN`).
     *   Success Criteria: `release.yml` executes semantic-release successfully, resulting in an updated `package.json`, a new Git tag, and a GitHub Release. The action outputs the new version number.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.8:** Set up Docker Buildx
     *   Action: Use `docker/setup-buildx-action@v3`.
     *   Success Criteria: `release.yml` includes `docker/setup-buildx-action@v3`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.9:** Log in to Docker Hub
     *   Action: Use `docker/login-action@v3` with `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets.
     *   Success Criteria: `release.yml` includes `docker/login-action@v3` configured with repository secrets.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.10:** Extract New Version Tag *(Revised)*
     *   Action: Add a step to get the new version tag created by semantic-release (e.g., from `github.event.release.tag_name` or action output). Store as `NEW_VERSION_TAG`.
     *   Success Criteria: `release.yml` successfully determines the new version tag (e.g., `v1.1.0`) created by semantic-release.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 2.11:** Build and Push Docker Image with Tags *(Revised)*
     *   Action: Use `docker/build-push-action@v5`. Configure to build, tag image as `jakkaj/mcp-knowledge-graph:${NEW_VERSION_TAG}` and `jakkaj/mcp-knowledge-graph:latest`, and push (`push: true`).
     *   Success Criteria: `release.yml` includes `docker/build-push-action@v5` configured to build, tag correctly, and push to Docker Hub.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 ### Phase 3: Configuration, Documentation, and Secrets
 
 *   **Task 3.1:** Configure Semantic Release *(New)*
     *   Action: Create a semantic-release configuration file (e.g., `.releaserc.json`) defining plugins and aligning with Conventional Commits.
     *   Success Criteria: A valid semantic-release configuration file exists.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 3.2:** Document Workflows *(Revised)*
     *   Action: Update project documentation explaining CI checks, Conventional Commit requirement, automated releases, required secrets, and the need for branch protection.
     *   Success Criteria: Project documentation is updated and clear.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 3.3:** Configure GitHub Secrets *(Revised)*
     *   Action: Add/ensure `DOCKERHUB_USERNAME`, `DOCKERHUB_TOKEN`, and potentially `GH_TOKEN` (if default `GITHUB_TOKEN` is insufficient for semantic-release) secrets.
     *   Success Criteria: Required secrets are securely stored.
-    *   Status: `- [ ]`
+    *   Status: `- [ ]` (This requires GitHub UI access and should be done by a repository admin)
 
 *   **Task 3.4:** Configure Branch Protection Rules *(New)*
     *   Action: Recommend configuring GitHub branch protection rules for the `main` branch (`Settings > Branches > Add branch protection rule`). Enable "Require status checks to pass before merging" and select the CI job (e.g., `build-and-test` from `ci.yml`) as a required check.
     *   Success Criteria: Branch protection rules for `main` are configured in GitHub settings to require the CI workflow job to pass before merging. (Manual GitHub UI step).
-    *   Status: `- [ ]`
+    *   Status: `- [ ]` (This requires GitHub UI access and should be done by a repository admin)
 
 ---
 
@@ -173,23 +173,23 @@ This phase is revised for automatic release triggered by pushes to main.
 - [x] Task 1.12: Test and Verify Workflow *(Additional Task)*
 
 **Phase 2: Automated Release Workflow**
-- [ ] Task 2.1: Create Release Workflow File
-- [ ] Task 2.2: Define Release Workflow Triggers *(Revised)*
-- [ ] Task 2.3: Define Release Job Environment and Permissions *(Revised)*
-- [ ] Task 2.4: Add Code Checkout Step (Full History)
-- [ ] Task 2.5: Add Node.js Setup Step
-- [ ] Task 2.6: Add Dependency Installation Step
-- [ ] Task 2.7: Run Semantic Release *(New)*
-- [ ] Task 2.8: Set up Docker Buildx
-- [ ] Task 2.9: Log in to Docker Hub
-- [ ] Task 2.10: Extract New Version Tag *(Revised)*
-- [ ] Task 2.11: Build and Push Docker Image with Tags *(Revised)*
+- [x] Task 2.1: Create Release Workflow File
+- [x] Task 2.2: Define Release Workflow Triggers *(Revised)*
+- [x] Task 2.3: Define Release Job Environment and Permissions *(Revised)*
+- [x] Task 2.4: Add Code Checkout Step (Full History)
+- [x] Task 2.5: Add Node.js Setup Step
+- [x] Task 2.6: Add Dependency Installation Step
+- [x] Task 2.7: Run Semantic Release *(New)*
+- [x] Task 2.8: Set up Docker Buildx
+- [x] Task 2.9: Log in to Docker Hub
+- [x] Task 2.10: Extract New Version Tag *(Revised)*
+- [x] Task 2.11: Build and Push Docker Image with Tags *(Revised)*
 
 **Phase 3: Configuration, Documentation, and Secrets**
-- [ ] Task 3.1: Configure Semantic Release *(New)*
-- [ ] Task 3.2: Document Workflows *(Revised)*
-- [ ] Task 3.3: Configure GitHub Secrets *(Revised)*
-- [ ] Task 3.4: Configure Branch Protection Rules *(New)*
+- [x] Task 3.1: Configure Semantic Release *(New)*
+- [x] Task 3.2: Document Workflows *(Revised)*
+- [ ] Task 3.3: Configure GitHub Secrets *(Revised)* (Requires GitHub UI access)
+- [ ] Task 3.4: Configure Branch Protection Rules *(New)* (Requires GitHub UI access)
 
 ---
 
@@ -201,5 +201,3 @@ This phase is revised for automatic release triggered by pushes to main.
 *   The release workflow successfully runs semantic-release, determines version bump, updates `package.json`, creates Git tag, generates release notes, creates GitHub Release, builds Docker image, and pushes tagged image (`vX.Y.Z` and `latest`) to Docker Hub.
 *   Commits without release-triggering Conventional Commit prefixes merged to `main` do not trigger a new release.
 *   The process, including Conventional Commits and branch protection, is documented, and required secrets/configurations are set up.
-
----
