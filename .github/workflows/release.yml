@@ -13,6 +13,7 @@ jobs:
       issues: write
       pull-requests: write
       packages: write
+      checks: write  # Added permission for test reporter
     
     steps:
       - name: Checkout
