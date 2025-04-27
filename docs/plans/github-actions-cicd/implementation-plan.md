@@ -16,52 +16,62 @@ This phase focuses on creating a workflow that automatically runs checks on ever
 *   **Task 1.1:** Create Workflow Directory Structure
     *   Action: Create the necessary directories: `.github/workflows/`.
     *   Success Criteria: The directory `.github/workflows/` exists in the project root.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.2:** Create CI Workflow File
     *   Action: Create a new file named `ci.yml` inside `.github/workflows/`. Define a job within it (e.g., named `build-and-test`).
     *   Success Criteria: The file `.github/workflows/ci.yml` exists and contains a job definition.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.3:** Define CI Workflow Triggers
     *   Action: Configure `ci.yml` to trigger on `pull_request` events targeting the `main` branch.
     *   Success Criteria: `ci.yml` contains the configuration `on: pull_request: branches: [ main ]`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.4:** Define CI Job Environment
     *   Action: Configure the CI job (e.g., `build-and-test`) to run on the latest Ubuntu runner (`runs-on: ubuntu-latest`).
     *   Success Criteria: The CI job in `ci.yml` specifies `runs-on: ubuntu-latest`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.5:** Add Code Checkout Step
     *   Action: Use the standard `actions/checkout@v4` action to check out the repository code within the CI job.
     *   Success Criteria: The CI job in `ci.yml` includes a step using `actions/checkout@v4`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.6:** Add Node.js Setup Step
     *   Action: Use `actions/setup-node@v4` to set up the required Node.js environment (e.g., LTS version). Include caching for `npm` dependencies.
     *   Success Criteria: The CI job includes steps for Node.js setup and npm caching.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.7:** Add Dependency Installation Step
     *   Action: Add a step to run `npm ci`.
     *   Success Criteria: The CI job includes a step executing `npm ci`.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.8:** Add Unit Test Step
     *   Action: Add a step to execute the unit tests using `make test`.
     *   Success Criteria: The CI job includes a step executing `make test`. The workflow job fails if tests fail.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.9:** Add Docker Build Step
     *   Action: Add a step to build the Docker image using `make docker-build`.
     *   Success Criteria: The CI job includes a step executing `make docker-build`. The workflow job fails if the build fails.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
 
 *   **Task 1.10:** Add Docker MCP Test Step
     *   Action: Add a step to run `make docker-test-mcp`. Capture output and validate it contains expected patterns (e.g., `"tools": [`, `"name": "create_entities"`). Fail if the test or validation fails.
     *   Success Criteria: The CI job includes steps for `make docker-test-mcp` and output validation. The workflow job fails if the test or validation fails.
-    *   Status: `- [ ]`
+    *   Status: `- [x]`
+
+*   **Task 1.11:** Fix Test Issues for CI Compatibility *(Additional Task)*
+    *   Action: Identify and fix any test issues that cause failures in the CI environment but pass locally. Add debug output as needed.
+    *   Success Criteria: All tests pass successfully in the GitHub Actions environment, and the workflow job completes with a successful status.
+    *   Status: `- [x]`
+
+*   **Task 1.12:** Test and Verify Workflow *(Additional Task)*
+    *   Action: Create a pull request to trigger the workflow and verify that it runs and completes successfully.
+    *   Success Criteria: The GitHub Actions workflow is triggered by the pull request and all steps complete successfully.
+    *   Status: `- [x]`
 
 ### Phase 2: Automated Release Workflow Setup (Push to Main)
 
@@ -149,16 +159,18 @@ This phase is revised for automatic release triggered by pushes to main.
 ### Checklist
 
 **Phase 1: CI Workflow**
-- [ ] Task 1.1: Create Workflow Directory Structure
-- [ ] Task 1.2: Create CI Workflow File
-- [ ] Task 1.3: Define CI Workflow Triggers
-- [ ] Task 1.4: Define CI Job Environment
-- [ ] Task 1.5: Add Code Checkout Step
-- [ ] Task 1.6: Add Node.js Setup Step
-- [ ] Task 1.7: Add Dependency Installation Step
-- [ ] Task 1.8: Add Unit Test Step
-- [ ] Task 1.9: Add Docker Build Step
-- [ ] Task 1.10: Add Docker MCP Test Step
+- [x] Task 1.1: Create Workflow Directory Structure
+- [x] Task 1.2: Create CI Workflow File
+- [x] Task 1.3: Define CI Workflow Triggers
+- [x] Task 1.4: Define CI Job Environment
+- [x] Task 1.5: Add Code Checkout Step
+- [x] Task 1.6: Add Node.js Setup Step
+- [x] Task 1.7: Add Dependency Installation Step
+- [x] Task 1.8: Add Unit Test Step
+- [x] Task 1.9: Add Docker Build Step
+- [x] Task 1.10: Add Docker MCP Test Step
+- [x] Task 1.11: Fix Test Issues for CI Compatibility *(Additional Task)*
+- [x] Task 1.12: Test and Verify Workflow *(Additional Task)*
 
 **Phase 2: Automated Release Workflow**
 - [ ] Task 2.1: Create Release Workflow File

@@ -22,6 +22,10 @@
 - I can also ask you to pull an issue so we can start working on a new plan based on it.
 - Update issues using the `github` MCP server's `update_issue` tool. You may need to read the plan file content first and include it in the 'body' argument. Example: `<use_mcp_tool><server_name>github</server_name><tool_name>update_issue</tool_name><arguments>{\"owner\":\"<owner>\", \"repo\":\"<repo>\", \"issue_number\":<number>, \"title\":\"<title>\", \"body\":\"<plan content>\"}</arguments></use_mcp_tool>`
 - REMEMBER: as you work on tasks and check them off in our plan document you should sync that plan to the github issue.
+- REMEMBER: as you update issues in github you should add a comment with what the change was. 
+- When using `update_issue` with markdown content in the `body`, use literal newlines (`\n`) within the JSON string for correct GitHub rendering, but still escape quotes as `\\"`.
+
+
 
 ## Following Plans
 - When coding you need to follow the plan phases and check off the tasks as they are completed.  

@@ -22,7 +22,8 @@
 		"vscode": {
 			"extensions": [
 				"RooVeterinaryInc.roo-cline",
-				"bierner.markdown-mermaid"
+				"bierner.markdown-mermaid",
+				"github.vscode-github-actions"
 			]
 		}
 	},
