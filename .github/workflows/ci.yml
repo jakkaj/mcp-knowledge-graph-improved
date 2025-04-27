@@ -1,0 +1,40 @@
+name: CI Checks
+
+on:
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch: # Add manual trigger option
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run unit tests
+        run: make test
+        
+      - name: Build Docker image
+        run: make docker-build
+
+      - name: Run Docker MCP Test
+        run: |
+          OUTPUT=$(make docker-test-mcp)
+          echo "$OUTPUT"
+          # Validate that the output contains expected patterns
+          if echo "$OUTPUT" | grep -q '"tools": \[' && echo "$OUTPUT" | grep -q '"name": "create_entities"'; then
+            echo "Docker MCP test passed - found expected patterns in output"
+          else
+            echo "Docker MCP test failed - did not find expected patterns in output"
+            exit 1
+          fi
