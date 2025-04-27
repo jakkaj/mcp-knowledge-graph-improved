@@ -8,6 +8,7 @@
 
 ## Github Integration
 - For rules specific to interacting with GitHub issues, commits, and MCP tools within this project, refer to: `docs/guides/github-integration-rules.md`
+- Follow the conventional commits specification for all commits as outlined in the GitHub integration rules.
 - For detailed general guidance on working with GitHub workflows, PRs, and Git operations, refer to the comprehensive guide at: `docs/guides/github-workflow/llm-agent-github-guide.md`
 
 ## Following Plans
