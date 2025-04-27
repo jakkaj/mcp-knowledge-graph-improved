@@ -188,8 +188,8 @@ This phase is revised for automatic release triggered by pushes to main.
 **Phase 3: Configuration, Documentation, and Secrets**
 - [x] Task 3.1: Configure Semantic Release *(New)*
 - [x] Task 3.2: Document Workflows *(Revised)*
-- [ ] Task 3.3: Configure GitHub Secrets *(Revised)* (Requires GitHub UI access)
-- [ ] Task 3.4: Configure Branch Protection Rules *(New)* (Requires GitHub UI access)
+- [x] Task 3.3: Configure GitHub Secrets *(Revised)* (Requires GitHub UI access)
+- [x] Task 3.4: Configure Branch Protection Rules *(New)* (Requires GitHub UI access)
 
 ---
 

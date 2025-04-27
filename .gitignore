@@ -30,6 +30,7 @@ pids
 # Testing
 coverage/
 .nyc_output/
+test-results/
 
 # IDEs and editors
 .idea/

@@ -29,6 +29,56 @@ jobs:
       - name: Install dependencies
         run: npm ci
       
+      - name: Run tests
+        run: make test
+      
+      - name: Publish Unit Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: unit-test-results
+          path: test-results/test-results.xml
+      
+      - name: Build Docker image
+        run: make docker-build
+
+      - name: Run Docker MCP Test
+        run: |
+          OUTPUT=$(make docker-test-mcp)
+          echo "$OUTPUT"
+          # Validate that the output contains expected patterns
+          if echo "$OUTPUT" | grep -q '"tools": \[' && echo "$OUTPUT" | grep -q '"name": "create_entities"'; then
+            echo "Docker MCP test passed - found expected patterns in output"
+          else
+            echo "Docker MCP test failed - did not find expected patterns in output"
+            exit 1
+          fi
+
+      - name: Publish Docker Test Results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: docker-test-results
+          path: test-results/docker-test-results.xml
+      
+      - name: Mocha Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Mocha Tests
+          path: test-results/test-results.xml
+          reporter: java-junit
+          fail-on-error: true
+      
+      - name: Docker Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
+        with:
+          name: Docker MCP Tests
+          path: test-results/docker-test-results.xml
+          reporter: java-junit
+          fail-on-error: true
+      
       - name: Run semantic-release
         id: semantic
         uses: cycjimmy/semantic-release-action@v4
