@@ -8,6 +8,10 @@ on:
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      checks: write  # Added permission for test reporter
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
