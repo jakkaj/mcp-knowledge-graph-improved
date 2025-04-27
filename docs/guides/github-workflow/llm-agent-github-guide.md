@@ -66,23 +66,21 @@ git pull
 git branch -d issue-X-phase-Y
 ```
 
-### Angular Commit Format
+### Conventional Commits Format
 
-Always structure commits in Angular format:
+This project uses [semantic-release](https://github.com/semantic-release/semantic-release) for automated version management and release creation. All commit messages **MUST** follow the [Conventional Commits](https://www.conventionalcommits.org/) specification:
 
 ```
-<type>(<scope>): <subject>
+<type>(<optional scope>): <description>
 
-<body>
+[optional body]
 
-Issue #<number>
+[optional footer(s)]
 ```
 
-- **Types**: feat, fix, docs, style, refactor, test, chore
-- **Scope**: area of code being changed (ci, workflow, server, etc.)
-- **Subject**: concise description in present tense
-- **Body**: bullet points with details of changes
-- **Footer**: reference to issue number
+For detailed guidelines on conventional commits and how they trigger semantic versioning, please refer to the [GitHub Integration Rules](../github-integration-rules.md#conventional-commits-and-semantic-versioning) document.
+
+> **Important**: The commit format directly impacts versioning. Using `feat:` will trigger a minor version bump, `fix:` a patch version bump, and adding a breaking change footer or `!` will trigger a major version bump.
 
 ### Branch Naming Convention
 

@@ -1,6 +1,7 @@
-# Copilot Instructions
+# Rules from:
 
 - General Rule: Always add debug output to tests if they are failing rather than guessing. Remember to clean up when it's working!
+- REMEMBER: YOU MUST READ THE GUIDE IF IT PERTAINS TO WHAT YOU ARE GOING TO DO!
 
 ## Plan Structure Guidelines
 - If your task involves creating or modifying project plans or architectures, refer to the detailed guidelines in: `docs/guides/plan-structure-guidelines.md`

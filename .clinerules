@@ -1,12 +1,14 @@
-# Rules from .clinerules:
+# Rules from:
 
 - General Rule: Always add debug output to tests if they are failing rather than guessing. Remember to clean up when it's working!
+- REMEMBER: YOU MUST READ THE GUIDE IF IT PERTAINS TO WHAT YOU ARE GOING TO DO!
 
 ## Plan Structure Guidelines
 - If your task involves creating or modifying project plans or architectures, refer to the detailed guidelines in: `docs/guides/plan-structure-guidelines.md`
 
 ## Github Integration
 - For rules specific to interacting with GitHub issues, commits, and MCP tools within this project, refer to: `docs/guides/github-integration-rules.md`
+- Follow the conventional commits specification for all commits as outlined in the GitHub integration rules.
 - For detailed general guidance on working with GitHub workflows, PRs, and Git operations, refer to the comprehensive guide at: `docs/guides/github-workflow/llm-agent-github-guide.md`
 
 ## Following Plans
