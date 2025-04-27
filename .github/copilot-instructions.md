@@ -24,7 +24,7 @@
 - REMEMBER: as you work on tasks and check them off in our plan document you should sync that plan to the github issue.
 - REMEMBER: as you update issues in github you should add a comment with what the change was. 
 - When using `update_issue` with markdown content in the `body`, use literal newlines (`\n`) within the JSON string for correct GitHub rendering, but still escape quotes as `\\"`.
-
+- For detailed guidance on working with GitHub workflows, PRs, and Git operations using MCP server tools, refer to: `docs/guides/github-workflow/llm-agent-github-guide.md`
 
 
 ## Following Plans
@@ -41,4 +41,4 @@
 ## Project
 
 - Our source is a typescript project in ./src. 
-- ./dist is not our source, it is the build output.  
+- ./dist is not our source, it is the build output.
