@@ -1,7 +1,7 @@
 
 
 ## Repository Info
-- Project lives in **`jakkaj/videospeeder`**. Use this for GitHub operations.
+- Project lives in **`jakkaj/mcp-knowledge-graph-improved`**. Use this for GitHub operations.
 - **General Rule:** When tests fail, add debug output before guessing. Clean up once fixed.
 - **IMPORTANT:** Some tasks have detailed guides—**always consult** them.
 
@@ -26,6 +26,7 @@
 ---
 
 ## GitHub Integration
+- you need to put PAGER=cat on the front of all git commands to ensure it doesn't block the terminal
 - Work through the **`github` MCP server**. Always pull the issue first (`get_issue`) and push updates with `update_issue`.
 - Keep the GitHub issue body and your local plan in sync; add a one‑line comment for every meaningful change.
 

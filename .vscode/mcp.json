@@ -10,7 +10,7 @@
                 "--init",
                 "-v",
                 "/workspaces/mcp-knowledge-graph-improved/.roo:/data",
-                "jakkaj/mcp-knowledge-graph",
+                "ghcr.io/jakkaj/mcp-knowledge-graph",
                 "node",
                 "dist/index.js",
                 "--server",
