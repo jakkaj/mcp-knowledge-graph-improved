@@ -218,7 +218,7 @@ make docker-build
 Alternatively, you can pull the pre-built image directly from GitHub Container Registry:
 
 ```bash
-docker pull ghcr.io/jakkaj/mcp-knowledge-graph
+docker pull ghcr.io/jakkaj/mcp-knowledge-graph:latest
 ```
 
 #### Run the Server
@@ -228,7 +228,7 @@ Once you have the image (either built locally or pulled from GitHub Container Re
 ```bash
 docker run -i --rm --init \
   -v $(pwd)/.roo:/data \
-  ghcr.io/jakkaj/mcp-knowledge-graph \
+  ghcr.io/jakkaj/mcp-knowledge-graph:latest \
   node dist/index.js --server --memory-path /data/memory.jsonl
 ```
 
@@ -241,7 +241,7 @@ You can adjust the mount path and memory file location as needed.
 
 ### Using with Roo and Cline (.roo/mcp.json)
 
-To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) or [Cline](https://github.com/modelcontextprotocol/cline), configure your `.roo/mcp.json` file to point to the Dockerized server. Make sure to use the correct image name (`ghcr.io/jakkaj/mcp-knowledge-graph`) whether you built it locally or pulled it.
+To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) or [Cline](https://github.com/modelcontextprotocol/cline), configure your `.roo/mcp.json` file to point to the Dockerized server. Make sure to use the correct image name (`ghcr.io/jakkaj/mcp-knowledge-graph:latest`) whether you built it locally or pulled it.
 
 #### Example `.roo/mcp.json`
 
@@ -257,7 +257,7 @@ To use this MCP server with [Roo](https://github.com/modelcontextprotocol/roo) o
         "--init",
         "-v",
         "/absolute/path/to/.roo:/data",
-        "ghcr.io/jakkaj/mcp-knowledge-graph", // Use the correct image name
+        "ghcr.io/jakkaj/mcp-knowledge-graph:latest", // Use the correct image name
         "node",
         "dist/index.js",
         "--server",
