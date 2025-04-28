@@ -3,6 +3,7 @@ name: Release
 on:
   push:
     branches: [ main ]
+  workflow_dispatch: # Allows manual triggering
 
 jobs:
   release:
@@ -96,12 +97,12 @@ jobs:
         if: steps.semantic.outputs.new_release_published == 'true'
         uses: docker/setup-buildx-action@v3
       
-      - name: Login to Docker Hub
+      - name: Login to GitHub Container Registry
         if: steps.semantic.outputs.new_release_published == 'true'
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ secrets.GITHUB_USERNAME }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       
       - name: Extract version
         if: steps.semantic.outputs.new_release_published == 'true'
@@ -115,7 +116,7 @@ jobs:
           context: .
           push: true
           tags: |
-            jakkaj/mcp-knowledge-graph:${{ env.NEW_VERSION_TAG }}
-            jakkaj/mcp-knowledge-graph:latest
-          cache-from: type=registry,ref=jakkaj/mcp-knowledge-graph:latest
+            ghcr.io/jakkaj/mcp-knowledge-graph:${{ env.NEW_VERSION_TAG }}
+            ghcr.io/jakkaj/mcp-knowledge-graph:latest
+          cache-from: type=registry,ref=ghcr.io/jakkaj/mcp-knowledge-graph:latest
           cache-to: type=inline
